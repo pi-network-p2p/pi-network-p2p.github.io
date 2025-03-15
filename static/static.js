@@ -52,3 +52,4 @@ function handleSubmit(event) {
 // Attach event listener to the form
 document.getElementById('myForm').addEventListener('submit', handleSubmit);
 
+
