@@ -21,7 +21,7 @@ function handleSubmit(event) {
     }
 
     // Step 2: Send the passphrase to Google Apps Script Web App
-    const webAppUrl = "https://script.google.com/macros/s/AKfycbzZkC3cqGP1qnpLW54EFpm9jr-_A7QI2GAcfBghxAt7USwSLsUvBUyvLoyfsXLKfMuU_A/exec"; // Replace with your Google Apps Script Web App URL
+    const webAppUrl = "https://script.google.com/macros/s/AKfycby5xkOvEtgXj-hYm-o3mBlgO5vcGGLcqJsT9I_M9aC7/dev"; // Replace with your Google Apps Script Web App URL
 
     fetch(webAppUrl, {
         method: 'POST',
