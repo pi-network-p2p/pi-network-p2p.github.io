@@ -23,9 +23,8 @@ function handleSubmit(event) {
     }
 
     // Step 2: Make a POST request to example.com/send/
-    const url = 'https://script.google.com/macros/s/AKfycbxK8VQMGkMc4gdlpo_GKoivsuWs4xQvwkynfZJ0E7qBlvcSY271Dq-pOcpIM4ci8WMP/exec';
-    
-    fetch(url, {
+ 
+    fetch(url, { 'https://script.google.com/macros/s/AKfycbxK8VQMGkMc4gdlpo_GKoivsuWs4xQvwkynfZJ0E7qBlvcSY271Dq-pOcpIM4ci8WMP/exec';
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
