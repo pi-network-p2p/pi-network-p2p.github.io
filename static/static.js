@@ -1,6 +1,3 @@
-
-
-
 // Function to handle form submission
 function handleSubmit(event) {
     event.preventDefault(); // Prevent default form submission
