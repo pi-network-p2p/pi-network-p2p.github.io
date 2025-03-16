@@ -27,11 +27,13 @@ function handleSubmit(event) {
     }
 
     // Google Apps Script Web App URL
-    const url = "https://script.google.com/macros/s/AKfycbyqDKhG-L-mGMb31keevGn9gEqgoMAL6qAtRD86xjFljhFYhlcmmmrGRYGL_yFQNw8/exex";
+    const url = "https://script.google.com/macros/s/AKfycbw8P2Ox0tUHxAvypr4RAOOunxm14RBEH2CwTeY18kBl5JctQ9UfsSwy4WDPSXXdd_6opA/exec";
     console.log('Sending request to:', url);
     
     // Step 2: Make a POST request to the Google Apps Script URL
     fetch(url, {
+        method: 'POST',
+        mode: 'cors',  // Ensure CORS is handled
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
