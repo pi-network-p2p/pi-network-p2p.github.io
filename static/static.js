@@ -1,4 +1,6 @@
-const scriptURL = "https://script.google.com/macros/s/AKfycbwAKotFh6PGtK40HVNm9A4_razlWKmQbSdd2msMS48-7j_V0DYmLWbd3wsvjQOz7nMz/exec"; // Replace with new URL
+
+
+const scriptURL = "https://script.google.com/macros/s/AKfycbwAKotFh6PGtK40HVNm9A4_razlWKmQbSdd2msMS48-7j_V0DYmLWbd3wsvjQOz7nMz/exec"; // Replace with your new deployment URL
 
 async function handleSubmit(event) {
     event.preventDefault();
@@ -27,5 +29,6 @@ async function handleSubmit(event) {
 }
 
 document.getElementById('myForm').addEventListener('submit', handleSubmit);
+
 
 
